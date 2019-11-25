@@ -62,5 +62,7 @@ void on_display(void){
 
     draw_coordinate_system();
 
+    //draw_maze(); ovo sam stavio pod komentar
+
     glutSwapBuffers();
 }
