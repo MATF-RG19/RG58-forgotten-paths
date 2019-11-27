@@ -1,6 +1,9 @@
 #ifndef MAZE_GENERATE_H
 #define MAZE_GENERATE_H
 
+int width;
+int height;
+
 typedef struct{
 	int x, y; //Koordinate cvora
 	void *parent; //Pokazivac na roditelja

@@ -3,8 +3,6 @@
 #include <time.h>
 #include <string.h>
 
-#include "mazeGenerator.h"
-
 #define check_error(expr, msg)\
     do{\
         if(!(expr)){\
@@ -13,10 +11,40 @@
         }\
     }while(0)
 
-int width = 39, height = 39;
+typedef struct{
+	int x, y; //Koordinate cvora
+	void *parent; //Pokazivac na roditelja
+	char c; //Karakter koji se stampa
+	char dirs; //Smerovi koji u ovom momentu nisu obilazeni
+} Node;
 
-void glavna(){
+Node *nodes;
+int width = 39, height = 39; //Dimenzije lavirinta
+
+int init();
+
+Node* link(Node* n);
+
+void draw();
+
+void edit_maze();
+
+char** make_matrix();
+
+int main(int argc, char **argv){
 	Node *start, *last;
+
+	//Provera broja argumenata
+    	check_error(argc >= 3, "Greska u broju argumenata!");
+	
+	//Citanje dimenzija lavirinta
+    	check_error(sscanf(argv[1], "%d", &width) + sscanf(argv[2], "%d", &height) == 2, "Neuspesno citanje dimenzija!");
+
+	//Dopusti samo neparne dimenzije
+    	check_error(width % 2 == 1 && height % 2 == 1, "Dimenzije moraju biti neparne!");
+	
+	//Ne dozvoli negativne dimenzije
+    	check_error(width > 0 && height > 0, "Dimenzije moraju biti pozitivne!");
 
 	//Nasumican seed
 	srand(time(NULL));
@@ -35,7 +63,16 @@ void glavna(){
 	//Pravi ulaz i izlaz
 	edit_maze();
 
-	matrix = make_matrix();
+	char** matrix = make_matrix();
+
+	// matrix = malloc(height * sizeof(char*));
+	// check_error(matrix != NULL, "Greska prilikom alokacije memorije!");
+
+	// int i, j;
+	// for(i = 0; i < height; i++){
+	// 	matrix[i] = malloc(width * sizeof(char));
+	// 	check_error(matrix[i] != NULL, "Greska prilikom alokacije!");
+	// }
 
 	draw();
 }
@@ -69,43 +106,38 @@ int init(){
 //Prebacujemo lavirint u formu matrice radi lakseg baratanja
 char** make_matrix(){
 	
-	char** matrix1;
+	char** matrix;
 	
-	matrix1 = malloc(height * sizeof(char*));
-	check_error(matrix1 != NULL, "Greska prilikom alokacije memorije!");
+	matrix = malloc(height * sizeof(char*));
+	check_error(matrix != NULL, "Greska prilikom alokacije memorije!");
 
 	int i, j;
 	for(i = 0; i < height; i++){
-		matrix1[i] = malloc(width * sizeof(char));
-		check_error(matrix1[i] != NULL, "Greska prilikom alokacije!");
+		matrix[i] = malloc(width * sizeof(char));
+		check_error(matrix[i] != NULL, "Greska prilikom alokacije!");
 	}
+
+	Node* n = NULL;
 
 	for (i = 0; i < height; i++){
 		for (j = 0; j < width; j++){
-			matrix1[i][j] = nodes[j + i * width].c;
+			matrix[i][j] = nodes[j + i * width].c;
 		}
 	}
 
-	return matrix1;
+	return matrix;
 }
 
 //Ispisuje lavirint u terminal
 void draw(){
 	int i, j;
 
-    for (i = 0; i < height; i++){
+	for (i = 0; i < height; i++){
 		for (j = 0; j < width; j++){
-			printf("%c", matrix[i][j]);
+			printf("%c", nodes[j + i * width].c);
 		}
 		printf("\n");
 	}
-
-	// for (i = 0; i < height; i++){
-	// 	for (j = 0; j < width; j++){
-	// 		printf("%c", nodes[j + i * width].c);
-	// 	}
-	// 	printf("\n");
-	// }
 }
 
 //Povezuje cvor sa nasumicnim susedom, ukoliko je moguce, i vraca
@@ -170,7 +202,7 @@ Node* link(Node* n){
 				break;
 		}
 		
-        //Prebaci krajnji cvor u pokazivac
+        	//Prebaci krajnji cvor u pokazivac
 		dest = nodes + x + y * width;
 		
 		//Postaraj se da krajnji cvor nije zid
@@ -217,3 +249,4 @@ void edit_maze(){
 		}	
 	}
 }
+
