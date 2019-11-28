@@ -1,5 +1,6 @@
 #include <GL/glut.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "mazeGenerator.h"
 
