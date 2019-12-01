@@ -20,6 +20,49 @@ static void on_reshape(int width, int height);
 
 int _width = 39, _height = 39;
 
+void set_light(){
+    // Pozicija svetla
+    GLfloat light_position[] = { 1, 1, 1, 0 };
+
+    // Ambijentalna komponenta svetlosti
+    GLfloat light_ambient[] = { 0.1, 0.1, 0.1, 1 };
+
+    // Difuzna komponenta svetlosti
+    GLfloat light_diffuse[] = { 0.95, 0.95, 0.95, 1 };
+
+    // Spekularna komponenta svetlosti
+    GLfloat light_specular[] = { 0.8, 0.8, 0.2, 1 };
+
+    // Koeficijenti ambijentalne refleksije materijala
+    GLfloat ambient_coeffs[] = { 0.5, 0.5, 0.1, 1 };
+
+    // Koeficijenti difuzne refleksije materijala
+    GLfloat diffuse_coeffs[] = { 1, 1, 0.8, 1 };
+
+    // Koeficijenti spekularne refleksije materijala
+    GLfloat specular_coeffs[] = { 1, 1, 1, 0 };
+
+    // Koeficijent glatkosti materijala
+    GLfloat shininess = 20;
+
+    // Brise se prethodni sadrzaj prozora
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Ukljucuje se osvjetljenje i podesavaju parametri svetla
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+
+    // Podesavaju se parametri materijala
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_coeffs);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_coeffs);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, specular_coeffs);
+    glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+}
+
 void draw_coordinate_system(){
     // Iscrtavanje x ose
     glPushMatrix();
@@ -99,11 +142,11 @@ Point find_finish(){
 void draw_floor(){
     glPushMatrix();
         glBegin(GL_POLYGON);
-            glColor3f(0, 1, 0.7);
+            glColor3f(1, 1, 1);
             glVertex3f(0, 0, 0);
-            glVertex3f(0, 0, 78);
-            glVertex3f(78, 0, 78);
-            glVertex3f(78, 0, 0);
+            glVertex3f(0, 0, 195);
+            glVertex3f(195, 0, 195);
+            glVertex3f(195, 0, 0);
         glEnd();
     glPopMatrix();
 }
@@ -118,8 +161,8 @@ void draw_maze(){
         for(j=0; j<_height; j++){
             if(matrix[i][j] == '@'){
                 glPushMatrix();
-                    glTranslatef(2*i, 5, 2*j);
-                    glScalef(2, 10, 2);
+                    glTranslatef(5*i, 5, 5*j);
+                    glScalef(5, 10, 5);
                     glutSolidCube(1);
                 glPopMatrix();
             }
@@ -134,7 +177,7 @@ int main(int argc, char** argv){
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 
     // Kreiranje prozora
-    glutInitWindowSize(800, 800);
+    glutInitWindowSize(1920, 1080);
     glutInitWindowPosition(0, 0);
     glutCreateWindow("Forgotten Paths");
 
@@ -162,19 +205,18 @@ void on_keyboard(unsigned char key, int x, int y){
     
     switch(key){
 
-        // Prekidanje igrice
-        case 27:
+        case 27: // Prekidanje igrice
             exit(EXIT_SUCCESS);
             break;
-        case 'w':
+        case ('w'|'W'): // Kretanje pravo
             break;
-        case 'a':
+        case ('a'|'A'): // Kretanje levo
             break;
-        case 's':
+        case ('s'|'S'): // Kretanje dole
             break;
-        case 'd':
+        case ('d'|'D'): // Kretanje desno
             break;
-        case 'x':
+        case ('x'|'X'): // Promena pogleda
             break;
     }
 
@@ -191,10 +233,13 @@ void on_reshape(int width, int height){
 
 void on_display(void){
 
+    set_light();
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(40, 300, 40, 50, 50, 50, 0, 1, 0);
+    gluLookAt(-70, 120, -70, 50, 50, 50, 0, 1, 0);
 
     draw_coordinate_system();
 
