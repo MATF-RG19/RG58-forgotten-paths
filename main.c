@@ -1,8 +1,18 @@
 #include <GL/glut.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdio.h>
 
 #include "mazeGenerator.h"
+
+typedef struct Point{
+    double x;
+    double y;
+    double z;
+} Point;
+
+Point start;
+Point finish;
 
 static void on_display();
 static void on_keyboard(unsigned char key, int x, int y);
@@ -39,6 +49,52 @@ void draw_coordinate_system(){
     glPopMatrix();
 }
 
+Point find_start(){
+    double _x;
+    double _z;
+
+    int i, j;
+
+    for(i = 0; i < _width; i++)
+        for(j = 0; j < _height; j++)
+            if(matrix[i][j] != '@'){
+                _x = i;
+                _z = j;
+                break;
+            }
+    Point res;
+
+    res.x = _x;
+    res.z = _z;
+    res.y = 0;
+
+    printf("%lf %lf %lf\n", res.x, res.y, res.z);
+
+    return res;
+}
+
+Point find_finish(){
+    double _x;
+    double _z;
+
+    int i, j;
+
+    for(i = _width-1; i >= 0; i--)
+        for(j = _height-1; j >= 0; j--)
+            if(matrix[i][j] == '@'){
+                _x = i;
+                _z = j;
+                break;
+            }
+    Point res;
+
+    res.x = _x;
+    res.z = _z;
+    res.y = 0;
+    
+    return res;
+}
+
 // Iscrtavanje poda
 void draw_floor(){
     glPushMatrix();
@@ -62,7 +118,7 @@ void draw_maze(){
         for(j=0; j<_height; j++){
             if(matrix[i][j] == '@'){
                 glPushMatrix();
-                    glTranslatef(2*i, 0, 2*j);
+                    glTranslatef(2*i, 5, 2*j);
                     glScalef(2, 10, 2);
                     glutSolidCube(1);
                 glPopMatrix();
@@ -86,11 +142,15 @@ int main(int argc, char** argv){
     glutKeyboardFunc(on_keyboard);
     glutReshapeFunc(on_reshape);
     glutDisplayFunc(on_display);
-    
+
     // Obavlja se OpenGL  inicijalizacija
     glClearColor(0.75, 0.75, 0.75, 0);
 
     glEnable(GL_DEPTH_TEST);
+
+    glavna();
+    start = find_start();
+    finish = find_finish();
 
     // Program ulazi u glavnu petlju
     glutMainLoop();
@@ -105,6 +165,16 @@ void on_keyboard(unsigned char key, int x, int y){
         // Prekidanje igrice
         case 27:
             exit(EXIT_SUCCESS);
+            break;
+        case 'w':
+            break;
+        case 'a':
+            break;
+        case 's':
+            break;
+        case 'd':
+            break;
+        case 'x':
             break;
     }
 
@@ -128,7 +198,6 @@ void on_display(void){
 
     draw_coordinate_system();
 
-    glavna();
     draw_maze();
     draw_floor();
 
