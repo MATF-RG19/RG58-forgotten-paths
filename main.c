@@ -2,8 +2,11 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
+#include <math.h>
 
 #include "mazeGenerator.h"
+#include "draw.h"
+#include "light_textures.h"
 
 typedef struct Point{
     double x;
@@ -19,78 +22,6 @@ static void on_keyboard(unsigned char key, int x, int y);
 static void on_reshape(int width, int height);
 
 int _width = 39, _height = 39;
-
-void set_light(){
-    // Pozicija svetla
-    GLfloat light_position[] = { 1, 1, 1, 0 };
-
-    // Ambijentalna komponenta svetlosti
-    GLfloat light_ambient[] = { 0.1, 0.1, 0.1, 1 };
-
-    // Difuzna komponenta svetlosti
-    GLfloat light_diffuse[] = { 0.95, 0.95, 0.95, 1 };
-
-    // Spekularna komponenta svetlosti
-    GLfloat light_specular[] = { 0.8, 0.8, 0.2, 1 };
-
-    // Koeficijenti ambijentalne refleksije materijala
-    GLfloat ambient_coeffs[] = { 0.5, 0.5, 0.1, 1 };
-
-    // Koeficijenti difuzne refleksije materijala
-    GLfloat diffuse_coeffs[] = { 1, 1, 0.8, 1 };
-
-    // Koeficijenti spekularne refleksije materijala
-    GLfloat specular_coeffs[] = { 1, 1, 1, 0 };
-
-    // Koeficijent glatkosti materijala
-    GLfloat shininess = 20;
-
-    // Brise se prethodni sadrzaj prozora
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // Ukljucuje se osvjetljenje i podesavaju parametri svetla
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-
-    // Podesavaju se parametri materijala
-    glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_coeffs);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_coeffs);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, specular_coeffs);
-    glMaterialf(GL_FRONT, GL_SHININESS, shininess);
-}
-
-void draw_coordinate_system(){
-    // Iscrtavanje x ose
-    glPushMatrix();
-        glColor3f(1,0,0);
-        glBegin(GL_LINES);
-            glVertex3f(100,0,0);
-            glVertex3f(-100,0,0);
-        glEnd();
-    glPopMatrix();
-
-    // Iscrtavanje y ose
-    glPushMatrix();
-        glColor3f(0,1,0); 
-        glBegin(GL_LINES); 
-            glVertex3f(0,-100,0);
-            glVertex3f(0,100,0);
-        glEnd();
-    glPopMatrix();
-
-    // Iscrtavanje z ose
-    glPushMatrix();
-        glColor3f(0,0,1); 
-        glBegin(GL_LINES);
-            glVertex3f(0,0,100);
-            glVertex3f(0,0,-100);
-        glEnd();
-    glPopMatrix();
-}
 
 Point find_start(){
     double _x;
@@ -136,38 +67,6 @@ Point find_finish(){
     res.y = 0;
     
     return res;
-}
-
-// Iscrtavanje poda
-void draw_floor(){
-    glPushMatrix();
-        glBegin(GL_POLYGON);
-            glColor3f(1, 1, 1);
-            glVertex3f(0, 0, 0);
-            glVertex3f(0, 0, 195);
-            glVertex3f(195, 0, 195);
-            glVertex3f(195, 0, 0);
-        glEnd();
-    glPopMatrix();
-}
-
-// Iscrtavanje lavirinta uz pomoc matrice
-// u kojoj je generisan 
-void draw_maze(){
-
-    int i, j;
-
-    for(i=0; i<_width; i++){
-        for(j=0; j<_height; j++){
-            if(matrix[i][j] == '@'){
-                glPushMatrix();
-                    glTranslatef(5*i, 5, 5*j);
-                    glScalef(5, 10, 5);
-                    glutSolidCube(1);
-                glPopMatrix();
-            }
-        }
-    }
 }
 
 int main(int argc, char** argv){
@@ -241,7 +140,7 @@ void on_display(void){
     glLoadIdentity();
     gluLookAt(-70, 120, -70, 50, 50, 50, 0, 1, 0);
 
-    draw_coordinate_system();
+    //draw_coordinate_system();
 
     draw_maze();
     draw_floor();
