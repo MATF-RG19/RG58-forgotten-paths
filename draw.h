@@ -9,4 +9,6 @@ extern void draw_floor(); // Funkcija za iscrtavanje poda
 
 extern void draw_coordinate_system(); // Funkcija za iscrtavanje koordinatnog sistema
 
+extern void draw_player(); // Funkcija za iscrtavanje igraca
+
 #endif

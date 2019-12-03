@@ -65,3 +65,10 @@ void draw_maze(){
         }
     }
 }
+
+void draw_player(){
+    glColor3f(1,0,0);
+    GLUquadric *quad;
+    quad = gluNewQuadric();
+    gluSphere(quad,2,1000,10);
+}
