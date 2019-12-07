@@ -36,8 +36,6 @@ static float theta;
 static float delta_phi;
 static float delta_theta;
 
-double _h = (double)(-39*5/2);
-
 Point start; // Pocetna pozicija
 Point finish; // Zavrsna pozicija
 
@@ -57,7 +55,7 @@ static void on_mouse(int button, int state, int x, int y);
 static void on_motion(int x, int y);
 
 int _width = 39, _height = 39; // Dimenzije lavirinta
-
+double _h;
 // Funkcija koja odredjuje koordinate pocetne pozicije
 Point find_start(){
     double _x;
@@ -108,20 +106,25 @@ Point find_finish(){
     return res;
 }
 
-
 int nema_kolizije1(){
-    int poz1 = floor(lopta.x/5);
-    int poz2 = floor(lopta.z/5);
+    int poz1 = floor(lopta.x)+1.2;
+    int poz2 = floor(lopta.z);
+
     printf("%d %d\n", poz1, poz2);
-    if(matrix[poz1][poz2+1] == '@')
+
+    if(matrix[poz1][poz2] == '@')
         return 0;
     else
         return 1;
 }
+
 /*
 int nema_kolizije2(){
-    int poz1 = (int)(floor(lopta.z))-1.2;
-    int poz2 = (int)(floor(lopta.x));
+    int poz1 = floor(lopta.z)-1.2;
+    int poz2 = floor(lopta.x);
+
+    printf("%d %d\n", poz1, poz2);
+
     if(matrix[poz2][poz1] == '@')
         return 0;
     else
@@ -149,6 +152,7 @@ int nema_kolizije4(){
 }
 */
 
+// Funkcija koja vrsi inicijalizaciju globalnih promenljivih
 void initialize(){
     phi = 0;
     theta = pi/4;
@@ -165,7 +169,7 @@ void initialize(){
     lopta.z = finish.z;
 
     first_person = 1;
-
+    _h = (double)(-_width*5/2);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glGetFloatv(GL_MODELVIEW_MATRIX, matrixR);
