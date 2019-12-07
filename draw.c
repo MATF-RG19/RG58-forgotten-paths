@@ -5,6 +5,8 @@
 int __height = 39;
 int __width = 39;
 
+double h = (double)(-39*5/2);
+
 void draw_coordinate_system(){
     // Iscrtavanje x ose
     glPushMatrix();
@@ -39,10 +41,10 @@ void draw_floor(){
     glPushMatrix();
         glBegin(GL_POLYGON);
             glColor3f(1, 1, 1);
-            glVertex3f(0, 0, 0);
-            glVertex3f(0, 0, 195);
-            glVertex3f(195, 0, 195);
-            glVertex3f(195, 0, 0);
+            glVertex3f(-h, 0, -h);
+            glVertex3f(-h, 0, h);
+            glVertex3f(h, 0, h);
+            glVertex3f(h, 0, -h);
         glEnd();
     glPopMatrix();
 }
@@ -57,7 +59,7 @@ void draw_maze(){
         for(j=0; j<__height; j++){
             if(matrix[i][j] == '@'){
                 glPushMatrix();
-                    glTranslatef(5*i, 5, 5*j);
+                    glTranslatef(h + 5*i, 5, h + 5*j);
                     glScalef(5, 10, 5);
                     glutSolidCube(1);
                 glPopMatrix();
