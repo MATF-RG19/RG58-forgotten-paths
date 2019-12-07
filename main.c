@@ -107,7 +107,7 @@ Point find_finish(){
 }
 
 int nema_kolizije1(){
-    int poz1 = floor(lopta.x)+1.2;
+    int poz1 = floor(lopta.x)+1;
     int poz2 = floor(lopta.z);
 
     printf("%d %d\n", poz1, poz2);
@@ -120,12 +120,12 @@ int nema_kolizije1(){
 
 /*
 int nema_kolizije2(){
-    int poz1 = floor(lopta.z)-1.2;
+    int poz1 = floor(lopta.z)-1;
     int poz2 = floor(lopta.x);
 
     printf("%d %d\n", poz1, poz2);
 
-    if(matrix[poz2][poz1] == '@')
+    if(matrix[poz1][poz2] == '@')
         return 0;
     else
         return 1;
@@ -197,7 +197,7 @@ int main(int argc, char** argv){
     glClearColor(0.75, 0.75, 0.75, 0);
 
     glEnable(GL_DEPTH_TEST);
-
+    init_texture();
     initialize();
 
     // Program ulazi u glavnu petlju
@@ -309,7 +309,7 @@ void on_reshape(int width, int height){
 
 void on_display(void){
 
-    set_light();
+    set_light(); // Podesava se osvetljenje
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
@@ -320,7 +320,7 @@ void on_display(void){
     if(first_person == 0)
         gluLookAt(-100, 200+ 100 * cos(theta) * sin(phi), -100, 0, 0, 0, 0, 1, 0);
     else
-        gluLookAt(lopta.x, lopta.y, lopta.z, 0, 0, 0, 0, 1, 0);
+        gluLookAt(lopta.x, 5+lopta.y, lopta.z, 0, 0, 0, 0, 1, 0);
 
     glMultMatrixf(matrixR);
 

@@ -11,4 +11,6 @@ extern void draw_coordinate_system(); // Funkcija za iscrtavanje koordinatnog si
 
 extern void draw_player(); // Funkcija za iscrtavanje igraca
 
+extern void init_texture(); // Funkcija za inicijalizaciju tekstura
+
 #endif

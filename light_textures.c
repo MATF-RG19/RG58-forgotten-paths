@@ -1,4 +1,5 @@
 #include <GL/glut.h>
+#include "image.h"
 
 void set_light(){
     // Pozicija svetla
