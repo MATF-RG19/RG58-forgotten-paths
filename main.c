@@ -6,7 +6,7 @@
 
 #include "mazeGenerator.h"
 #include "draw.h"
-#include "light_textures.h"
+#include "light.h"
 
 // Struktura za predstavljanje tacaka
 typedef struct Point{
@@ -106,24 +106,21 @@ Point find_finish(){
     return res;
 }
 
-int nema_kolizije1(){
-    int poz1 = floor(lopta.x)+1;
-    int poz2 = floor(lopta.z);
-
-    printf("%d %d\n", poz1, poz2);
-
-    if(matrix[poz1][poz2] == '@')
-        return 0;
-    else
+int is_win(int x, int y){
+    if(x == 38 && y == 37)
         return 1;
+    else
+        return 0;
 }
 
-/*
-int nema_kolizije2(){
-    int poz1 = floor(lopta.z)-1;
-    int poz2 = floor(lopta.x);
+int nema_kolizije1(){
+    int poz1 = floor(lopta.x)+1;
+    int poz2 = round(lopta.z)+0.2;
 
-    printf("%d %d\n", poz1, poz2);
+    if(is_win(poz1, poz2)){
+        printf("Uspesno zavrsena igra!\n");
+        exit(EXIT_SUCCESS);
+    }
 
     if(matrix[poz1][poz2] == '@')
         return 0;
@@ -132,25 +129,54 @@ int nema_kolizije2(){
 }
 
 int nema_kolizije3(){
-    int poz1 = (int)(floor(lopta.x));
-    int poz2 = (int)(floor(lopta.z));
-    printf("%d %d", poz1, poz2);
+
+    int poz1 = floor(lopta.x);
+    int poz2 = round(lopta.z);
+
+    if(is_win(poz1, poz2)){
+        printf("Uspesno zavrsena igra!");
+        exit(EXIT_SUCCESS);
+    }
+
+    if(poz1 == 0 && poz2 == 1)
+        return 0;
+
     if(matrix[poz1][poz2] == '@')
         return 0;
     else
         return 1;
 }
 
-int nema_kolizije4(){
-    double new_z = lopta.z + 1.1;
-    int poz1 = (int)(floor(new_z));
-    int poz2 = (int)(floor(lopta.x));
+int nema_kolizije2(){
+    int poz1 = floor(lopta.z);
+    int poz2 = round(lopta.x);
+
+    if(is_win(poz2, poz1)){
+        printf("Uspesno zavrsena igra!");
+        exit(EXIT_SUCCESS);
+    }
+
     if(matrix[poz2][poz1] == '@')
         return 0;
     else
         return 1;
 }
-*/
+
+int nema_kolizije4(){
+
+    int poz1 = floor(lopta.z)+1;
+    int poz2 = round(lopta.x);
+
+    if(is_win(poz2, poz1)){
+        printf("Uspesno zavrsena igra!");
+        exit(EXIT_SUCCESS);
+    }
+
+    if(matrix[poz2][poz1] == '@')
+        return 0;
+    else
+        return 1;
+}
 
 // Funkcija koja vrsi inicijalizaciju globalnih promenljivih
 void initialize(){
@@ -168,7 +194,7 @@ void initialize(){
     lopta.y = finish.y;
     lopta.z = finish.z;
 
-    first_person = 1;
+    first_person = 0;
     _h = (double)(-_width*5/2);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -215,24 +241,27 @@ void on_keyboard(unsigned char key, int x, int y){
             break;
         case 'w': // Kretanje pravo
         case 'W':
-            if(nema_kolizije1())
+            if(nema_kolizije1()) // Proverava se kolizija sa prednjim zidom
                 lopta.x += 0.2;
             printf("%lf  %lf\n", lopta.x, lopta.z);
             glutPostRedisplay();
             break;
         case 'a': // Kretanje levo
         case 'A':
-            lopta.z -= 0.2;
+            if(nema_kolizije2()) // Proverava se kolizija sa levim zidom
+                lopta.z -= 0.2;
             glutPostRedisplay();
             break;
         case 's': // Kretanje dole
         case 'S':  
-            lopta.x -= 0.2;
+            if(nema_kolizije3()) // Proverava se kolizija sa zadnjim zidom
+                lopta.x -= 0.2;
             glutPostRedisplay();
             break;
         case 'd': // Kretanje desno
         case 'D':
-            lopta.z += 0.2;
+            if(nema_kolizije4()) // Proverava se kolizija sa desnim zidom
+                lopta.z += 0.2;
             glutPostRedisplay();
             break;
         case 'x': // Promena pogleda
@@ -291,7 +320,6 @@ void on_motion(int x, int y){
         glLoadIdentity();
         glRotatef(180 * (float) delta_x / 1920, 0, 1, 0);
         glMultMatrixf(matrixR);
-
         glGetFloatv(GL_MODELVIEW_MATRIX, matrixR);
     glPopMatrix();
 
@@ -324,11 +352,12 @@ void on_display(void){
 
     glMultMatrixf(matrixR);
 
-    draw_coordinate_system();
+    //draw_coordinate_system();
 
-    draw_maze();
     draw_floor();
+    draw_maze();
     
+    // Iscrtava se lopta
     glPushMatrix();
         glTranslatef(5*lopta.x+_h, 5, 5*lopta.z+_h);
         draw_player();

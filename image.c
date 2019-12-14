@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include "image.h"
 
+// Biblioteka je u potpunosti preuzeta sa sajta asistenta.
+
 Image *image_init(int width, int height) {
 
   Image *image;

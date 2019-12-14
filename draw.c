@@ -106,6 +106,7 @@ void draw_maze(){
                 glPushMatrix();
                     glTranslatef(h + 5*i, 5, h + 5*j);
                     glScalef(5, 10, 5);
+                    glColor3f(0, 0, 1);
                     glutSolidCube(1);
                 glPopMatrix();
             }
@@ -114,7 +115,7 @@ void draw_maze(){
 }
 
 void draw_player(){
-    glColor3f(1,0,0);
+    glColor3f(1, 0, 0);
     GLUquadric *quad;
     quad = gluNewQuadric();
     gluSphere(quad,1.5,1000,10);
