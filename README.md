@@ -1,7 +1,6 @@
 # Forgotten_Paths
 
-##### Tema projekta je kreiranje nasumičnog lavirinta
-##### i igrača koji se krece kroz isti.
+##### Tema projekta je kreiranje nasumičnog lavirinta i igrača koji se kreče kroz isti.
 <hr>
 
 #### Kontrole:
