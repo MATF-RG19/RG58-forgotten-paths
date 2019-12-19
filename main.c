@@ -23,7 +23,7 @@ typedef struct Player{
 } Player;
 
 int first_person; // Indikator moda
-
+int is_game_over; // Indikator kraja igre
 // Konstanta pi
 static float pi = 3.141592653589793;
 
@@ -56,8 +56,8 @@ static void on_motion(int x, int y);
 
 int _width = 39, _height = 39; // Dimenzije lavirinta
 double _h;
-// Funkcija koja odredjuje koordinate pocetne pozicije
-Point find_start(){
+// Funkcija koja odredjuje koordinate krajnje pozicije
+Point find_finish(){
     double _x;
     double _z;
 
@@ -81,8 +81,8 @@ Point find_start(){
     return res;
 }
 
-// Funkcija koja odredjuje kooridnate krajnje pozicije
-Point find_finish(){
+// Funkcija koja odredjuje kooridnate pocetne pozicije
+Point find_start(){
     double _x;
     double _z;
 
@@ -106,20 +106,27 @@ Point find_finish(){
     return res;
 }
 
+// Funkcija koja proverava da li
+// je igrac stigao do kraja
 int is_win(int x, int y){
-    if(x == 38 && y == 37)
+    if(x == finish.x && y == finish.z)
         return 1;
     else
         return 0;
 }
 
-int nema_kolizije1(){
+// Funkcija za detektovanje kolizija
+// sa prednjim zidovima
+int collision_front(){
+
+    if(is_game_over)
+        return 0;
+
     int poz1 = floor(lopta.x)+1;
     int poz2 = round(lopta.z)+0.2;
 
     if(is_win(poz1, poz2)){
-        printf("Uspesno zavrsena igra!\n");
-        exit(EXIT_SUCCESS);
+        is_game_over = 1;
     }
 
     if(matrix[poz1][poz2] == '@')
@@ -128,14 +135,18 @@ int nema_kolizije1(){
         return 1;
 }
 
-int nema_kolizije3(){
+// Funkcija za detektovanje kolizija
+// sa zadnjim zidovima
+int collision_back(){
+
+    if(is_game_over)
+        return 0;
 
     int poz1 = floor(lopta.x);
     int poz2 = round(lopta.z);
 
     if(is_win(poz1, poz2)){
-        printf("Uspesno zavrsena igra!");
-        exit(EXIT_SUCCESS);
+        is_game_over = 1;
     }
 
     if(poz1 == 0 && poz2 == 1)
@@ -147,13 +158,18 @@ int nema_kolizije3(){
         return 1;
 }
 
-int nema_kolizije2(){
+// Funkcija za detektovanje kolizija
+// sa levim zidovima
+int collision_left(){
+
+    if(is_game_over)
+        return 0;
+
     int poz1 = floor(lopta.z);
     int poz2 = round(lopta.x);
 
     if(is_win(poz2, poz1)){
-        printf("Uspesno zavrsena igra!");
-        exit(EXIT_SUCCESS);
+        is_game_over = 1;
     }
 
     if(matrix[poz2][poz1] == '@')
@@ -162,14 +178,18 @@ int nema_kolizije2(){
         return 1;
 }
 
-int nema_kolizije4(){
+// Funkcija za detektovanje kolizija
+// sa desnim zidovima
+int collision_right(){
+
+    if(is_game_over)
+        return 0;
 
     int poz1 = floor(lopta.z)+1;
     int poz2 = round(lopta.x);
 
     if(is_win(poz2, poz1)){
-        printf("Uspesno zavrsena igra!");
-        exit(EXIT_SUCCESS);
+        is_game_over = 1;
     }
 
     if(matrix[poz2][poz1] == '@')
@@ -190,11 +210,13 @@ void initialize(){
     start = find_start();
     finish = find_finish();
 
-    lopta.x = finish.x;
-    lopta.y = finish.y;
-    lopta.z = finish.z;
+    lopta.x = start.x;
+    lopta.y = start.y;
+    lopta.z = start.z;
 
     first_person = 0;
+    is_game_over = 0;
+
     _h = (double)(-_width*5/2);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -220,7 +242,7 @@ int main(int argc, char** argv){
     glutMotionFunc(on_motion);
 
     // Obavlja se OpenGL  inicijalizacija
-    glClearColor(0.75, 0.75, 0.75, 0);
+    glClearColor(0, 0, 0, 0);
 
     glEnable(GL_DEPTH_TEST);
     init_texture();
@@ -239,31 +261,39 @@ void on_keyboard(unsigned char key, int x, int y){
         case 27: // Prekidanje igrice
             exit(EXIT_SUCCESS);
             break;
-        case 'w': // Kretanje pravo
+        case 'w': // Kretanje napred
         case 'W':
-            if(nema_kolizije1()) // Proverava se kolizija sa prednjim zidom
-                lopta.x += 0.2;
-            printf("%lf  %lf\n", lopta.x, lopta.z);
-            glutPostRedisplay();
-            break;
+            if(!is_game_over){
+                if(collision_front()) // Proverava se kolizija sa prednjim zidom
+                    lopta.x += 0.2;
+                printf("%lf  %lf\n", lopta.x, lopta.z);
+                glutPostRedisplay();
+                break;
+            }
         case 'a': // Kretanje levo
         case 'A':
-            if(nema_kolizije2()) // Proverava se kolizija sa levim zidom
-                lopta.z -= 0.2;
-            glutPostRedisplay();
-            break;
-        case 's': // Kretanje dole
+            if(!is_game_over){
+                if(collision_left()) // Proverava se kolizija sa levim zidom
+                    lopta.z -= 0.2;
+                glutPostRedisplay();
+                break;
+            }
+        case 's': // Kretanje nazad
         case 'S':  
-            if(nema_kolizije3()) // Proverava se kolizija sa zadnjim zidom
-                lopta.x -= 0.2;
-            glutPostRedisplay();
-            break;
+            if(!is_game_over){
+                if(collision_back()) // Proverava se kolizija sa zadnjim zidom
+                    lopta.x -= 0.2;
+                glutPostRedisplay();
+                break;
+            }
         case 'd': // Kretanje desno
         case 'D':
-            if(nema_kolizije4()) // Proverava se kolizija sa desnim zidom
-                lopta.z += 0.2;
-            glutPostRedisplay();
-            break;
+            if(!is_game_over){
+                if(collision_right()) // Proverava se kolizija sa desnim zidom
+                    lopta.z += 0.2;
+                glutPostRedisplay();
+                break;
+            }
         case 'x': // Promena pogleda
         case 'X':
             if(first_person)
@@ -271,7 +301,7 @@ void on_keyboard(unsigned char key, int x, int y){
             else
                 first_person = 1;
             break;
-        case 'p': //Dekrementira se ugao phi i ponovo iscrtava scena
+        case 'p': // Dekrementira se ugao phi i ponovo iscrtava scena
         case 'P': 
             phi -= delta_phi;
             if (phi > 2 * pi) {
@@ -290,6 +320,10 @@ void on_keyboard(unsigned char key, int x, int y){
                 phi += 2 * pi;
             }
             glutPostRedisplay();
+            break;
+        case 'm': // Ispisujemo "Game over!"
+        case 'M':
+            is_game_over = !is_game_over;
             break;
     }
 
@@ -327,41 +361,51 @@ void on_motion(int x, int y){
     glutPostRedisplay();
 }
 
+// Funkcija koja regulise akcije
+// prilikom promene dimenzija prozora
 void on_reshape(int width, int height){
 
     glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(60, (float) width / height, 1, 1000);
+    glutFullScreen();
 }
 
 void on_display(void){
 
-    set_light(); // Podesava se osvetljenje
+    if(!is_game_over){
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    // Imamo dva pogleda, jedan je u prvom licu
-    // dok u drugom imamo pogled iz visine
-    if(first_person == 0)
-        gluLookAt(-100, 200+ 100 * cos(theta) * sin(phi), -100, 0, 0, 0, 0, 1, 0);
-    else
-        gluLookAt(lopta.x, 5+lopta.y, lopta.z, 0, 0, 0, 0, 1, 0);
+        set_light(); // Podesava se osvetljenje
 
-    glMultMatrixf(matrixR);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        // Imamo dva pogleda, jedan je u prvom licu
+        // dok u drugom imamo pogled iz visine
+        if(!first_person)
+            gluLookAt(-100, 200 + 100*cos(theta)*sin(phi), -100, 0, 0, 0, 0, 1, 0);
+        else
+            gluLookAt(lopta.x, 5+lopta.y, lopta.z, 0, 0, 0, 0, 1, 0);
 
-    //draw_coordinate_system();
+        glMultMatrixf(matrixR);
 
-    draw_floor();
-    draw_maze();
-    
-    // Iscrtava se lopta
-    glPushMatrix();
-        glTranslatef(5*lopta.x+_h, 5, 5*lopta.z+_h);
-        draw_player();
-    glPopMatrix();
+        //draw_coordinate_system();
+
+        draw_floor();
+        draw_maze();
+        
+        // Iscrtava se lopta
+        glPushMatrix();
+            glTranslatef(5*lopta.x+_h, 5, 5*lopta.z+_h);
+            draw_player();
+        glPopMatrix();
+    }
+    else{
+        glClearColor(0, 0, 0, 0);
+        draw_game_over();
+    }
 
     glutSwapBuffers();
 }

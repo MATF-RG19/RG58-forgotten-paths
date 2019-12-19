@@ -2,9 +2,15 @@
 #include "draw.h"
 #include "mazeGenerator.h"
 #include "image.h"
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_LENGTH (100) // Maksimalna duzina reci
 
 int __height = 39;
 int __width = 39;
+
+char word[MAX_LENGTH];
 
 double h = (double)(-39*5/2);
 
@@ -75,7 +81,7 @@ void draw_coordinate_system(){
     glPopMatrix();
 }
 
-// Iscrtavanje poda
+// Iscrtavanje i teksturisanje poda
 void draw_floor(){
     glPushMatrix();
         glBindTexture(GL_TEXTURE_2D, names[0]);
@@ -119,4 +125,42 @@ void draw_player(){
     GLUquadric *quad;
     quad = gluNewQuadric();
     gluSphere(quad,1.5,1000,10);
+}
+
+void renderStrokeString(int x, int y,int z,void* font, char *string){
+
+    int len; // Duzina reci
+    glDisable(GL_LIGHTING);
+    glColor3f(1,0,0); // Postavljamo boju teksta
+    // Postavljamo dimenzije slova
+    glScalef(0.01,0.01,5);
+    glTranslatef(x,y,z);
+    len = strlen(string);
+    for (int i = 0; i < len; i++)
+    {
+        glutStrokeCharacter(font, string[i]);
+    }
+    glEnable(GL_LIGHTING); // Ponovo ukljucujemo osvetljenje
+}
+
+void draw_game_over(){   
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(0, 0, 1, 0, 0, 0, 0, 1, 0);
+
+    // Centriramo koordinate za ispis teksta
+    const int x = -540;
+    const int y = 0;
+    const int z = 0;
+
+    // Ispisujemo "Game over!"
+    sprintf(word,"Game over!");
+    glPushMatrix();
+        glScalef(0.05,0.05,5);
+        glPushAttrib(GL_LINE_BIT);
+            glLineWidth(4); // Postavljamo debljinu linije
+            renderStrokeString(x,y,z,GLUT_STROKE_MONO_ROMAN,word);
+        glPopAttrib();
+    glPopMatrix();
 }
