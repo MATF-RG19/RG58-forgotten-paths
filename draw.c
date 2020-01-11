@@ -7,6 +7,7 @@
 
 #define MAX_LENGTH (100) // Maksimalna duzina reci
 
+// Visina i sirina naseg lavirinta
 int __height = 39;
 int __width = 39;
 
@@ -17,7 +18,7 @@ double h = (double)(-39*5/2);
 static GLuint names[1]; // Niz imena tekstura
 #define FILENAME0 "floor.bmp" // Tekstura poda
 
-// Funkcija za inicijalizovanje struktura
+// Funkcija za inicijalizovanje tekstura
 void init_texture(){
 
     glEnable(GL_TEXTURE_2D);
@@ -120,6 +121,7 @@ void draw_maze(){
     }
 }
 
+// Iscrtavanje igraca
 void draw_player(){
     glColor3f(1, 0, 0);
     GLUquadric *quad;

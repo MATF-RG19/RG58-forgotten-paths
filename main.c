@@ -22,8 +22,8 @@ typedef struct Player{
     double z;
 } Player;
 
-int first_person; // Indikator moda
-int is_game_over; // Indikator kraja igre
+// Indikator kraja igre
+int is_game_over;
 // Konstanta pi
 static float pi = 3.141592653589793;
 
@@ -48,6 +48,7 @@ static float matrixR[16];
 static int mouse_x = 0;
 static int mouse_y = 0;
 
+// Callback funkcije
 static void on_display();
 static void on_keyboard(unsigned char key, int x, int y);
 static void on_reshape(int width, int height);
@@ -56,6 +57,7 @@ static void on_motion(int x, int y);
 
 int _width = 39, _height = 39; // Dimenzije lavirinta
 double _h;
+
 // Funkcija koja odredjuje koordinate krajnje pozicije
 Point find_finish(){
     double _x;
@@ -122,8 +124,10 @@ int collision_front(){
     if(is_game_over)
         return 0;
 
-    int poz1 = floor(lopta.x)+1;
-    int poz2 = round(lopta.z)+0.2;
+    //int poz1 = floor(lopta.x)+1;
+    int poz1 = floor(lopta.x+0.9);
+    //int poz2 = round(lopta.z)+0.2;
+    int poz2 = round(lopta.z);
 
     if(is_win(poz1, poz2)){
         is_game_over = 1;
@@ -142,7 +146,7 @@ int collision_back(){
     if(is_game_over)
         return 0;
 
-    int poz1 = floor(lopta.x);
+    int poz1 = floor(lopta.x+0.1);
     int poz2 = round(lopta.z);
 
     if(is_win(poz1, poz2)){
@@ -165,7 +169,7 @@ int collision_left(){
     if(is_game_over)
         return 0;
 
-    int poz1 = floor(lopta.z);
+    int poz1 = floor(lopta.z+0.1);
     int poz2 = round(lopta.x);
 
     if(is_win(poz2, poz1)){
@@ -185,7 +189,7 @@ int collision_right(){
     if(is_game_over)
         return 0;
 
-    int poz1 = floor(lopta.z)+1;
+    int poz1 = floor(lopta.z+0.9);
     int poz2 = round(lopta.x);
 
     if(is_win(poz2, poz1)){
@@ -214,7 +218,6 @@ void initialize(){
     lopta.y = start.y;
     lopta.z = start.z;
 
-    first_person = 0;
     is_game_over = 0;
 
     _h = (double)(-_width*5/2);
@@ -267,7 +270,6 @@ void on_keyboard(unsigned char key, int x, int y){
                 if(collision_front()) // Proverava se kolizija sa prednjim zidom
                     lopta.x += 0.2;
                 printf("%lf  %lf\n", lopta.x, lopta.z);
-                glutPostRedisplay();
                 break;
             }
         case 'a': // Kretanje levo
@@ -275,7 +277,6 @@ void on_keyboard(unsigned char key, int x, int y){
             if(!is_game_over){
                 if(collision_left()) // Proverava se kolizija sa levim zidom
                     lopta.z -= 0.2;
-                glutPostRedisplay();
                 break;
             }
         case 's': // Kretanje nazad
@@ -283,7 +284,6 @@ void on_keyboard(unsigned char key, int x, int y){
             if(!is_game_over){
                 if(collision_back()) // Proverava se kolizija sa zadnjim zidom
                     lopta.x -= 0.2;
-                glutPostRedisplay();
                 break;
             }
         case 'd': // Kretanje desno
@@ -291,16 +291,8 @@ void on_keyboard(unsigned char key, int x, int y){
             if(!is_game_over){
                 if(collision_right()) // Proverava se kolizija sa desnim zidom
                     lopta.z += 0.2;
-                glutPostRedisplay();
                 break;
             }
-        case 'x': // Promena pogleda
-        case 'X':
-            if(first_person)
-                first_person = 0;
-            else
-                first_person = 1;
-            break;
         case 'p': // Dekrementira se ugao phi i ponovo iscrtava scena
         case 'P': 
             phi -= delta_phi;
@@ -309,7 +301,6 @@ void on_keyboard(unsigned char key, int x, int y){
             } else if (phi < 0) {
                 phi += 2 * pi;
             }
-            glutPostRedisplay();
             break;
         case 'o':  // Inkrementira se ugao phi i ponovo iscrtava scena
         case 'O':
@@ -319,7 +310,6 @@ void on_keyboard(unsigned char key, int x, int y){
             } else if (phi < 0) {
                 phi += 2 * pi;
             }
-            glutPostRedisplay();
             break;
         case 'm': // Ispisujemo "Game over!"
         case 'M':
@@ -374,20 +364,18 @@ void on_reshape(int width, int height){
 
 void on_display(void){
 
+    glShadeModel(GL_FLAT);
+
     if(!is_game_over){
 
         set_light(); // Podesava se osvetljenje
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Brise se prethodni sadrzaj prozora
         
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-        // Imamo dva pogleda, jedan je u prvom licu
-        // dok u drugom imamo pogled iz visine
-        if(!first_person)
-            gluLookAt(-100, 200 + 100*cos(theta)*sin(phi), -100, 0, 0, 0, 0, 1, 0);
-        else
-            gluLookAt(lopta.x, 5+lopta.y, lopta.z, 0, 0, 0, 0, 1, 0);
+
+        gluLookAt(-100, 200 + 100*cos(theta)*sin(phi), -100, 0, 0, 0, 0, 1, 0);
 
         glMultMatrixf(matrixR);
 

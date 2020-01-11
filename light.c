@@ -12,7 +12,6 @@ void set_light(){
     GLfloat light_diffuse[] = { 0.95, 0.95, 0.95, 1 };
     
     // Spekularna komponenta svetlosti
-    //GLfloat light_specular[] = { 0.8, 0.8, 0.2, 1 };
     GLfloat light_specular[] = {1, 1, 1, 1,};
 
     // Koeficijenti ambijentalne refleksije materijala
