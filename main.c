@@ -78,7 +78,7 @@ Point find_finish(){
     res.z = _z;
     res.y = 0;
 
-    printf("%lf %lf %lf\n", res.x, res.y, res.z);
+    //printf("%lf %lf %lf\n", res.x, res.y, res.z);
 
     return res;
 }
@@ -103,7 +103,7 @@ Point find_start(){
     res.z = _z;
     res.y = 0;
 
-    printf("%lf %lf %lf\n", res.x, res.y, res.z);
+    //printf("%lf %lf %lf\n", res.x, res.y, res.z);
 
     return res;
 }
@@ -124,16 +124,15 @@ int collision_front(){
     if(is_game_over)
         return 0;
 
-    //int poz1 = floor(lopta.x)+1;
     int poz1 = floor(lopta.x+0.9);
-    //int poz2 = round(lopta.z)+0.2;
-    int poz2 = round(lopta.z);
+    int poz2 = round(lopta.z-0.2);
+    int poz3 = round(lopta.z+0.2);
 
     if(is_win(poz1, poz2)){
         is_game_over = 1;
     }
 
-    if(matrix[poz1][poz2] == '@')
+    if(matrix[poz1][poz2] == '@' || matrix[poz1][poz3] == '@')
         return 0;
     else
         return 1;
@@ -147,7 +146,8 @@ int collision_back(){
         return 0;
 
     int poz1 = floor(lopta.x+0.1);
-    int poz2 = round(lopta.z);
+    int poz2 = round(lopta.z-0.2);
+    int poz3 = round(lopta.z+0.2);
 
     if(is_win(poz1, poz2)){
         is_game_over = 1;
@@ -156,7 +156,7 @@ int collision_back(){
     if(poz1 == 0 && poz2 == 1)
         return 0;
 
-    if(matrix[poz1][poz2] == '@')
+    if(matrix[poz1][poz2] == '@' || matrix[poz1][poz3] == '@')
         return 0;
     else
         return 1;
@@ -170,13 +170,14 @@ int collision_left(){
         return 0;
 
     int poz1 = floor(lopta.z+0.1);
-    int poz2 = round(lopta.x);
+    int poz2 = round(lopta.x-0.2);
+    int poz3 = round(lopta.x+0.2);
 
     if(is_win(poz2, poz1)){
         is_game_over = 1;
     }
 
-    if(matrix[poz2][poz1] == '@')
+    if(matrix[poz2][poz1] == '@' || matrix[poz3][poz1] == '@')
         return 0;
     else
         return 1;
@@ -190,13 +191,14 @@ int collision_right(){
         return 0;
 
     int poz1 = floor(lopta.z+0.9);
-    int poz2 = round(lopta.x);
+    int poz2 = round(lopta.x-0.2);
+    int poz3 = round(lopta.x+0.2);
 
     if(is_win(poz2, poz1)){
         is_game_over = 1;
     }
 
-    if(matrix[poz2][poz1] == '@')
+    if(matrix[poz2][poz1] == '@' || matrix[poz3][poz1] == '@')
         return 0;
     else
         return 1;
@@ -204,7 +206,7 @@ int collision_right(){
 
 // Funkcija koja vrsi inicijalizaciju globalnih promenljivih
 void initialize(){
-    phi = 0;
+    phi = 1.361357;
     theta = pi/4;
 
     delta_phi = pi/90;
@@ -269,7 +271,6 @@ void on_keyboard(unsigned char key, int x, int y){
             if(!is_game_over){
                 if(collision_front()) // Proverava se kolizija sa prednjim zidom
                     lopta.x += 0.2;
-                printf("%lf  %lf\n", lopta.x, lopta.z);
                 break;
             }
         case 'a': // Kretanje levo

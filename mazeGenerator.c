@@ -1,3 +1,6 @@
+// Deo koda je preuzet sa adrese 
+// https://en.wikipedia.org/wiki/Maze_generation_algorithm
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
