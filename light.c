@@ -9,7 +9,7 @@ void set_light(){
     GLfloat light_ambient[] = { 0.3, 0.3, 0.3, 1 };
 
     // Difuzna komponenta svetlosti
-    GLfloat light_diffuse[] = { 0.95, 0.95, 0.95, 1 };
+    GLfloat light_diffuse[] = { 0.7, 0.7, 0.7, 0 };
     
     // Spekularna komponenta svetlosti
     GLfloat light_specular[] = {1, 1, 1, 1,};
@@ -18,7 +18,7 @@ void set_light(){
     GLfloat ambient_coeffs[] = { 0.6, 0.6, 0.1, 1 };
 
     // Koeficijenti difuzne refleksije materijala
-    GLfloat diffuse_coeffs[] = { 1, 1, 0.8, 1 };
+    GLfloat diffuse_coeffs[] = { 0.7, 0.7, 0.8, 1 };
 
     // Koeficijenti spekularne refleksije materijala
     GLfloat specular_coeffs[] = { 1, 1, 1, 0 };
