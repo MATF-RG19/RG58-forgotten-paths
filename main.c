@@ -206,7 +206,7 @@ int collision_right(){
 
 // Funkcija koja vrsi inicijalizaciju globalnih promenljivih
 void initialize(){
-    phi = 1.361357;
+    phi = pi/2;
     theta = pi/4;
 
     delta_phi = pi/90;
@@ -295,22 +295,14 @@ void on_keyboard(unsigned char key, int x, int y){
                 break;
             }
         case 'p': // Dekrementira se ugao phi i ponovo iscrtava scena
-        case 'P': 
-            phi -= delta_phi;
-            if (phi > 2 * pi) {
-                phi -= 2 * pi;
-            } else if (phi < 0) {
-                phi += 2 * pi;
-            }
+        case 'P':
+            if(phi > -pi/2)
+                phi -= delta_phi;
             break;
         case 'o':  // Inkrementira se ugao phi i ponovo iscrtava scena
         case 'O':
-            phi += delta_phi;
-            if (phi > 2 * pi) {
-                phi -= 2 * pi;
-            } else if (phi < 0) {
-                phi += 2 * pi;
-            }
+            if(phi < pi/2)
+                phi += delta_phi;
             break;
         case 'm': // Ispisujemo "Game over!"
         case 'M':
@@ -387,7 +379,7 @@ void on_display(void){
         
         // Iscrtava se lopta
         glPushMatrix();
-            glTranslatef(5*lopta.x+_h, 5, 5*lopta.z+_h);
+            glTranslatef(5*lopta.x+_h, 1.5, 5*lopta.z+_h);
             draw_player();
         glPopMatrix();
     }

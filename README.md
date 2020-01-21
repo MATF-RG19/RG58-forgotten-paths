@@ -8,14 +8,15 @@
 
 #### :video_game: Kontrole:
 
-| Taster      | Funkcija                       |
-| ----------- | -----------                    |
-| **W**       | Kretanje unapred               |
-| **A**       | Kretanje na levo               |
-| **S**       | Kretanje unazad                |
-| **D**       | Kretanje na desno              |
-| **P**       | Dekrementiranje ugla po visini |
-| **O**       | Inkrementiranje ugla po visini |
+| Taster       | Funkcija                       |
+| -----------  | -----------                    |
+| **W**        | Kretanje unapred               |
+| **A**        | Kretanje na levo               |
+| **S**        | Kretanje unazad                |
+| **D**        | Kretanje na desno              |
+| **P**        | Dekrementiranje ugla po visini |
+| **O**        | Inkrementiranje ugla po visini |
+| **MOUSE**    | Rotiranje scene levo desno     |
 
 <hr>
 
