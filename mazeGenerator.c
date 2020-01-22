@@ -101,7 +101,7 @@ char** make_matrix(){
 	int i, j;
 	for(i = 0; i < height; i++){
 		matrix1[i] = malloc(width * sizeof(char));
-		check_error(matrix1[i] != NULL, "Greska prilikom alokacije!");
+		check_error(matrix1[i] != NULL, "Greska prilikom alokacije memorije!");
 	}
 
 	for (i = 0; i < height; i++){

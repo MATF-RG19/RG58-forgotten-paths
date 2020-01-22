@@ -2,7 +2,7 @@
 
 ##### :memo: Informacije:
 * Tema projekta je kreiranje nasumičnog lavirinta i igrača koji se kreće kroz isti <br>
-* U igrici ne postoje nikakvi tipovi ograničenja, jedina poenta jeste da što je brže moguće napstite lavirint <br>
+* U igrici ne postoje nikakvi tipovi ograničenja, jedina poenta jeste da što je brže moguće napustite lavirint <br>
 
 <hr>
 

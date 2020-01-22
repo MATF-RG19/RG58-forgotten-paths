@@ -149,6 +149,7 @@ void draw_game_over(){
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+
     gluLookAt(0, 0, 1, 0, 0, 0, 0, 1, 0);
 
     // Centriramo koordinate za ispis teksta
@@ -159,10 +160,10 @@ void draw_game_over(){
     // Ispisujemo "Game over!"
     sprintf(word,"Game over!");
     glPushMatrix();
-        glScalef(0.05,0.05,5);
+        glScalef(0.05, 0.05, 5);
         glPushAttrib(GL_LINE_BIT);
-            glLineWidth(4); // Postavljamo debljinu linije
-            renderStrokeString(x,y,z,GLUT_STROKE_MONO_ROMAN,word);
+            glLineWidth(5); // Postavljamo debljinu linije
+            renderStrokeString(x, y, z, GLUT_STROKE_MONO_ROMAN, word);
         glPopAttrib();
     glPopMatrix();
 }
