@@ -16,7 +16,7 @@
 | **D**        | Kretanje na desno              |
 | **P**        | Dekrementiranje ugla po visini |
 | **O**        | Inkrementiranje ugla po visini |
-| **MOUSE**    | Rotiranje scene levo desno     |
+| **MOUSE**    | Rotiranje scene levo-desno     |
 
 <hr>
 
