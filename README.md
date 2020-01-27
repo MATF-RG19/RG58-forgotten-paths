@@ -22,6 +22,6 @@
 
 #### :wrench: Pokretanje
 * Projekat preuzimate koristeći komandu `git clone https://github.com/MATF-RG19/RG58-forgotten-paths.git` <br>
-* Pozicionirati se u ```.../RG58-forgotten-paths``` <br>
+* Pozicionirati se u ```.../RG58-forgotten-paths/Sources``` <br>
 * Zatim pomoću komande `make` pokrenite Makefile <br>
 * Zatim pokrenuti ```./Forgotten_Paths```
