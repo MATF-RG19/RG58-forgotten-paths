@@ -25,3 +25,4 @@
 * Pozicionirati se u ```.../RG58-forgotten-paths/Sources``` <br>
 * Zatim pomoću komande `make` pokrenite Makefile <br>
 * Zatim pokrenuti ```./Forgotten_Paths```
+* **Neophodno je imati instaliran ```OpenGL``` na sistemu**
